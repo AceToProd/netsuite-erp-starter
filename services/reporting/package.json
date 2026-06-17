@@ -1,0 +1,27 @@
+{
+  "name": "@netsuite-erp/reporting",
+  "version": "0.1.0",
+  "private": true,
+  "description": "NestJS reporting + API gateway for the NetSuite-like mini-ERP starter",
+  "scripts": {
+    "dev": "nest start --watch",
+    "start": "node dist/main",
+    "build": "nest build",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.4.4",
+    "@nestjs/core": "^10.4.4",
+    "@nestjs/platform-express": "^10.4.4",
+    "ioredis": "^5.4.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^10.4.5",
+    "@nestjs/schematics": "^10.1.4",
+    "@types/express": "^5.0.0",
+    "@types/node": "^20.16.10",
+    "typescript": "^5.6.2"
+  }
+}

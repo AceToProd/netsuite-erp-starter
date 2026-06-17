@@ -1,0 +1,3 @@
+packages:
+  - "services/reporting"
+  - "services/frontend"

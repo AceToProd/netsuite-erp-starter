@@ -1,0 +1,21 @@
+node_modules/
+dist/
+build/
+.turbo/
+*.log
+logs/
+
+# env
+.env
+**/.env
+!**/.env.example
+
+# java / maven
+services/erp-core/target/
+.mvn/
+
+# misc
+.DS_Store
+
+# ace-engine local workspace state (contains engine.key + master vite build)
+.ace/

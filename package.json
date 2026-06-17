@@ -1,0 +1,19 @@
+{
+  "name": "netsuite-erp-starter",
+  "version": "0.1.0",
+  "private": true,
+  "description": "NetSuite-like mini-ERP starter — Java (Spring Boot) ERP core + NestJS reporting/gateway + React (Vite) SPA, orchestrated by ace-engine.",
+  "scripts": {
+    "dev:erp-core": "mvn -q -f services/erp-core/pom.xml spring-boot:run",
+    "build:erp-core": "mvn -q -f services/erp-core/pom.xml -DskipTests package",
+    "dev:reporting": "pnpm --filter @netsuite-erp/reporting run dev",
+    "build:reporting": "pnpm --filter @netsuite-erp/reporting run build",
+    "dev:frontend": "pnpm --filter @netsuite-erp/frontend run dev",
+    "build:frontend": "pnpm --filter @netsuite-erp/frontend run build",
+    "build": "pnpm run build:erp-core && pnpm run build:reporting && pnpm run build:frontend",
+    "build:node": "pnpm run build:reporting && pnpm run build:frontend",
+    "typecheck": "pnpm --filter @netsuite-erp/reporting run typecheck && pnpm --filter @netsuite-erp/frontend run typecheck",
+    "dev": "node -e \"console.log('Run services individually: pnpm run dev:erp-core | dev:reporting | dev:frontend, or let ace-engine orchestrate via ace.json')\""
+  },
+  "packageManager": "pnpm@9.15.0"
+}
