@@ -66,6 +66,18 @@ public class DatabaseUrlEnvironmentPostProcessor implements EnvironmentPostProce
             return; // unknown scheme; keep H2
         }
 
+        // Switch driver/dialect/Flyway to Postgres *directly* here (highest
+        // precedence) rather than relying on application-postgres.properties:
+        // activating a profile from an EnvironmentPostProcessor runs too late to
+        // load the profile-specific config, so the H2 driver-class-name from
+        // application.properties would otherwise win (it did — boot failed with
+        // "Driver org.h2.Driver claims to not accept jdbcUrl jdbc:postgresql://").
+        props.put("spring.datasource.driver-class-name", "org.postgresql.Driver");
+        props.put("spring.jpa.database-platform", "org.hibernate.dialect.PostgreSQLDialect");
+        props.put("spring.jpa.hibernate.ddl-auto", "none");
+        props.put("spring.flyway.enabled", "true");
+        props.put("spring.flyway.baseline-on-migrate", "true");
+
         environment.addActiveProfile("postgres");
         environment.getPropertySources().addFirst(new MapPropertySource("aceDatabaseUrl", props));
     }
