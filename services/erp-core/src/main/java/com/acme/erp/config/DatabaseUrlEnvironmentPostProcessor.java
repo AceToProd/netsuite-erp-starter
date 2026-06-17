@@ -55,8 +55,27 @@ public class DatabaseUrlEnvironmentPostProcessor implements EnvironmentPostProce
                 }
                 int port = uri.getPort() == -1 ? 5432 : uri.getPort();
                 String path = (uri.getPath() == null) ? "" : uri.getPath();
-                String query = (uri.getQuery() == null) ? "" : "?" + uri.getQuery();
-                String jdbcUrl = "jdbc:postgresql://" + uri.getHost() + ":" + port + path + query;
+                String query = (uri.getQuery() == null) ? "" : uri.getQuery();
+
+                // Cloud SQL / libpq unix-socket form:
+                //   postgresql://user:pass@localhost/db?host=/cloudsql/INSTANCE
+                // pgjdbc can't parse the `host=` socket-dir param, so route the
+                // connection through junixsocket to the proxy's socket file.
+                String socketDir = queryParam(query, "host");
+                String jdbcUrl;
+                if (socketDir != null && socketDir.startsWith("/")) {
+                    String socketPath = socketDir.endsWith("/")
+                            ? socketDir + ".s.PGSQL.5432"
+                            : socketDir + "/.s.PGSQL.5432";
+                    jdbcUrl = "jdbc:postgresql://localhost" + path
+                            + "?socketFactory=org.newsclub.net.unix.AFUNIXSocketFactory$FactoryArg"
+                            + "&socketFactoryArg=" + socketPath
+                            + "&sslmode=disable";
+                } else {
+                    String host = (uri.getHost() == null) ? "localhost" : uri.getHost();
+                    jdbcUrl = "jdbc:postgresql://" + host + ":" + port + path
+                            + (query.isEmpty() ? "" : "?" + query);
+                }
                 props.put("spring.datasource.url", jdbcUrl);
             } catch (URISyntaxException ex) {
                 // Unparseable — leave the H2 default in place.
@@ -84,5 +103,20 @@ public class DatabaseUrlEnvironmentPostProcessor implements EnvironmentPostProce
 
     private static String decode(String value) {
         return URLDecoder.decode(value, StandardCharsets.UTF_8);
+    }
+
+    /** Returns the (decoded) value of a query parameter, or null if absent. */
+    private static String queryParam(String query, String key) {
+        if (query == null || query.isEmpty()) {
+            return null;
+        }
+        for (String pair : query.split("&")) {
+            int eq = pair.indexOf('=');
+            String k = eq >= 0 ? pair.substring(0, eq) : pair;
+            if (k.equals(key) && eq >= 0) {
+                return decode(pair.substring(eq + 1));
+            }
+        }
+        return null;
     }
 }

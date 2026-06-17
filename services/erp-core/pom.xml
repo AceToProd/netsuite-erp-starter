@@ -56,6 +56,15 @@
       <artifactId>postgresql</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <!-- junixsocket: lets pgjdbc connect to the Cloud SQL proxy unix socket
+         (/cloudsql/INSTANCE/.s.PGSQL.5432) that the PaaS image exposes. -->
+    <dependency>
+      <groupId>com.kohlschutter.junixsocket</groupId>
+      <artifactId>junixsocket-core</artifactId>
+      <version>2.10.1</version>
+      <type>pom</type>
+      <scope>runtime</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
