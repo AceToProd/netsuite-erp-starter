@@ -3,14 +3,16 @@ import { Customers } from './pages/Customers';
 import { Items } from './pages/Items';
 import { SalesOrders } from './pages/SalesOrders';
 import { Reports } from './pages/Reports';
+import { Payables } from './pages/Payables';
 
-type Tab = 'reports' | 'customers' | 'items' | 'orders';
+type Tab = 'reports' | 'customers' | 'items' | 'orders' | 'payables';
 
 const NAV: Array<{ id: Tab; label: string; icon: string }> = [
   { id: 'reports', label: 'Dashboard', icon: '◈' },
   { id: 'customers', label: 'Customers', icon: '◍' },
   { id: 'items', label: 'Items', icon: '▤' },
   { id: 'orders', label: 'Sales Orders', icon: '▦' },
+  { id: 'payables', label: 'Payables', icon: '▣' },
 ];
 
 export function App() {
@@ -56,6 +58,7 @@ export function App() {
           {tab === 'customers' && <Customers />}
           {tab === 'items' && <Items />}
           {tab === 'orders' && <SalesOrders />}
+          {tab === 'payables' && <Payables />}
         </section>
       </main>
     </div>

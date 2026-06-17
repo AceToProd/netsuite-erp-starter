@@ -43,4 +43,36 @@ export class ErpController {
   createOrder(@Body() body: unknown) {
     return this.erp.request('POST', '/api/sales-orders', body);
   }
+
+  // --- Accounts Payable (Release 2+) ---------------------------------------
+
+  @Get('vendors')
+  vendors() {
+    return this.erp.request('GET', '/api/vendors');
+  }
+
+  @Post('vendors')
+  createVendor(@Body() body: unknown) {
+    return this.erp.request('POST', '/api/vendors', body);
+  }
+
+  @Get('purchase-orders')
+  purchaseOrders() {
+    return this.erp.request('GET', '/api/purchase-orders');
+  }
+
+  @Get('purchase-orders/summary/open-payables')
+  openPayables() {
+    return this.erp.request('GET', '/api/purchase-orders/summary/open-payables');
+  }
+
+  @Get('purchase-orders/:id')
+  purchaseOrder(@Param('id') id: string) {
+    return this.erp.request('GET', `/api/purchase-orders/${id}`);
+  }
+
+  @Post('purchase-orders')
+  createPurchaseOrder(@Body() body: unknown) {
+    return this.erp.request('POST', '/api/purchase-orders', body);
+  }
 }

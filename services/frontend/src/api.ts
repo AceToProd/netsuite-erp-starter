@@ -47,6 +47,32 @@ export interface RevenueReport {
   generatedAt: string;
 }
 
+export interface Vendor {
+  id: number;
+  name: string;
+  email?: string;
+  terms?: string;
+  createdAt?: string;
+}
+
+export interface PurchaseOrder {
+  id: number;
+  vendorId: number;
+  status: string;
+  totalCents: number;
+  createdAt?: string;
+}
+
+export interface PoLineInput {
+  description: string;
+  quantity: number;
+  unitCostCents: number;
+}
+
+export interface OpenPayables {
+  openPayableCents: number;
+}
+
 async function http<T>(method: string, path: string, body?: unknown): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     method,
@@ -71,6 +97,11 @@ export const api = {
   createOrder: (input: { customerId: number; lines: OrderLineInput[] }) => http<SalesOrder>('POST', '/api/sales-orders', input),
   salesSummary: () => http<SalesSummary>('GET', '/api/reports/sales-summary'),
   revenue: () => http<RevenueReport>('GET', '/api/reports/revenue'),
+  vendors: () => http<Vendor[]>('GET', '/api/vendors'),
+  createVendor: (input: { name: string; email?: string; terms?: string }) => http<Vendor>('POST', '/api/vendors', input),
+  purchaseOrders: () => http<PurchaseOrder[]>('GET', '/api/purchase-orders'),
+  createPurchaseOrder: (input: { vendorId: number; lines: PoLineInput[] }) => http<PurchaseOrder>('POST', '/api/purchase-orders', input),
+  openPayables: () => http<OpenPayables>('GET', '/api/purchase-orders/summary/open-payables'),
 };
 
 export function formatCents(cents: number): string {
