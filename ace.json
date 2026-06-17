@@ -2,13 +2,16 @@
   "$schema": "https://ace-engine.dev/ace.schema.v3.json",
   "version": 3,
   "name": "netsuite-erp-starter",
-  "description": "NetSuite-like mini-ERP starter — a Java (Spring Boot) ERP domain core, a NestJS reporting + API-gateway service that aggregates and caches in Redis, and a React (Vite) dashboard SPA. Backed by PostgreSQL (Cloud SQL) and Redis (Memorystore). Orchestrated end-to-end by ace-engine from a single ace.json; runs zero-infra locally (embedded H2 + in-memory cache).",
+  "description": "NetSuite-like mini-ERP starter \u2014 a Java (Spring Boot) ERP domain core, a NestJS reporting + API-gateway service that aggregates and caches in Redis, and a React (Vite) dashboard SPA. Backed by PostgreSQL (Cloud SQL) and Redis (Memorystore). Orchestrated end-to-end by ace-engine from a single ace.json; runs zero-infra locally (embedded H2 + in-memory cache).",
   "instance_init": {
     "runtime": "node-20",
     "setup_script": "ace-setup.sh"
   },
   "stack": {
-    "languages": ["java", "typescript"],
+    "languages": [
+      "java",
+      "typescript"
+    ],
     "framework": "spring-boot+nestjs+react"
   },
   "domain": {
@@ -21,7 +24,7 @@
       "type": "database",
       "provider": "cloud_sql",
       "env_key": "DATABASE_URL",
-      "description": "PostgreSQL database (Cloud SQL) — system of record for the ERP core",
+      "description": "PostgreSQL database (Cloud SQL) \u2014 system of record for the ERP core",
       "instance_tier": "db-f1-micro"
     },
     {
@@ -36,43 +39,69 @@
       "name": "erp-core",
       "type": "server",
       "language": "java",
-      "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec java -jar services/erp-core/target/erp-core.jar --server.port={ace_port}'",
+      "command": "bash -lc 'echo BROKEN_RELEASE_E2E_R7 >&2; sleep 3; exit 1'",
       "build_command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; mvn -q -f services/erp-core/pom.xml -DskipTests package'",
       "port": 8080,
       "health_check": "/api/health",
       "start_order": 10,
       "env_file": "services/erp-core/.env",
-      "description": "Java Spring Boot ERP domain core — Customers, Items, Sales Orders + lines, GL Accounts + Journal Entries. Spring Data JPA + Flyway over Postgres (embedded H2 fallback for zero-infra).",
-      "env_keys": ["DATABASE_URL", "PORT"],
-      "cloud_run": { "memory": "768Mi", "cpu": "1", "min_instances": 0, "max_instances": 3 }
+      "description": "Java Spring Boot ERP domain core \u2014 Customers, Items, Sales Orders + lines, GL Accounts + Journal Entries. Spring Data JPA + Flyway over Postgres (embedded H2 fallback for zero-infra).",
+      "env_keys": [
+        "DATABASE_URL",
+        "PORT"
+      ],
+      "cloud_run": {
+        "memory": "768Mi",
+        "cpu": "1",
+        "min_instances": 0,
+        "max_instances": 3
+      }
     },
     {
       "name": "reporting",
       "type": "server",
       "language": "typescript",
-      "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec pnpm run dev:reporting'",
+      "command": "bash -lc 'echo BROKEN_RELEASE_E2E_R7 >&2; sleep 3; exit 1'",
       "build_command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; pnpm run build:reporting'",
       "port": 3000,
       "health_check": "/api/health",
       "start_order": 20,
       "env_file": "services/reporting/.env",
-      "description": "NestJS reporting + API gateway — calls erp-core, aggregates sales/revenue reports, caches in Redis (in-memory fallback), and proxies CRUD passthroughs so the SPA has one base URL.",
-      "env_keys": ["ERP_CORE_URL", "REDIS_URL", "PORT", "NODE_ENV"],
-      "cloud_run": { "memory": "512Mi", "cpu": "1", "min_instances": 0, "max_instances": 3 }
+      "description": "NestJS reporting + API gateway \u2014 calls erp-core, aggregates sales/revenue reports, caches in Redis (in-memory fallback), and proxies CRUD passthroughs so the SPA has one base URL.",
+      "env_keys": [
+        "ERP_CORE_URL",
+        "REDIS_URL",
+        "PORT",
+        "NODE_ENV"
+      ],
+      "cloud_run": {
+        "memory": "512Mi",
+        "cpu": "1",
+        "min_instances": 0,
+        "max_instances": 3
+      }
     },
     {
       "name": "frontend",
       "type": "static",
       "language": "typescript",
-      "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec pnpm --filter @netsuite-erp/frontend run preview -- --host 0.0.0.0 --port {ace_port}'",
+      "command": "bash -lc 'echo BROKEN_RELEASE_E2E_R7 >&2; sleep 3; exit 1'",
       "build_command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; pnpm run build:frontend'",
       "port": 5174,
       "health_check": "/",
       "start_order": 30,
       "env_file": "services/frontend/.env",
-      "description": "React + Vite SPA — ERP dashboard (Customers, Items, Sales Orders, Reports) calling the reporting gateway via VITE_API_TARGET.",
-      "env_keys": ["VITE_API_TARGET", "VITE_PORT"],
-      "cloud_run": { "memory": "256Mi", "cpu": "1", "min_instances": 0, "max_instances": 2 }
+      "description": "React + Vite SPA \u2014 ERP dashboard (Customers, Items, Sales Orders, Reports) calling the reporting gateway via VITE_API_TARGET.",
+      "env_keys": [
+        "VITE_API_TARGET",
+        "VITE_PORT"
+      ],
+      "cloud_run": {
+        "memory": "256Mi",
+        "cpu": "1",
+        "min_instances": 0,
+        "max_instances": 2
+      }
     }
   ],
   "environments": {
@@ -84,38 +113,94 @@
       "description": "QA / staging environment",
       "branch": "qa",
       "services_override": [
-        { "name": "erp-core", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec java -jar services/erp-core/target/erp-core.jar --server.port={ace_port}'", "port": 8080, "health_check": "/api/health" },
-        { "name": "reporting", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec node dist/main'", "port": 3000, "health_check": "/api/health" },
-        { "name": "frontend", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec pnpm --filter @netsuite-erp/frontend run preview -- --host 0.0.0.0 --port {ace_port}'", "port": 80 }
+        {
+          "name": "erp-core",
+          "command": "bash -lc 'echo BROKEN_RELEASE_E2E_R7 >&2; sleep 3; exit 1'",
+          "port": 8080,
+          "health_check": "/api/health"
+        },
+        {
+          "name": "reporting",
+          "command": "bash -lc 'echo BROKEN_RELEASE_E2E_R7 >&2; sleep 3; exit 1'",
+          "port": 3000,
+          "health_check": "/api/health"
+        },
+        {
+          "name": "frontend",
+          "command": "bash -lc 'echo BROKEN_RELEASE_E2E_R7 >&2; sleep 3; exit 1'",
+          "port": 80
+        }
       ]
     },
     "production": {
       "description": "Production environment",
       "branch": "prod",
       "services_override": [
-        { "name": "erp-core", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec java -jar services/erp-core/target/erp-core.jar --server.port={ace_port}'", "port": 8080, "health_check": "/api/health" },
-        { "name": "reporting", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec node dist/main'", "port": 3000, "health_check": "/api/health" },
-        { "name": "frontend", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec pnpm --filter @netsuite-erp/frontend run preview -- --host 0.0.0.0 --port {ace_port}'", "port": 80 }
+        {
+          "name": "erp-core",
+          "command": "bash -lc 'echo BROKEN_RELEASE_E2E_R7 >&2; sleep 3; exit 1'",
+          "port": 8080,
+          "health_check": "/api/health"
+        },
+        {
+          "name": "reporting",
+          "command": "bash -lc 'echo BROKEN_RELEASE_E2E_R7 >&2; sleep 3; exit 1'",
+          "port": 3000,
+          "health_check": "/api/health"
+        },
+        {
+          "name": "frontend",
+          "command": "bash -lc 'echo BROKEN_RELEASE_E2E_R7 >&2; sleep 3; exit 1'",
+          "port": 80
+        }
       ],
       "cloud_resources_override": [
-        { "type": "database", "provider": "cloud_sql", "instance_tier": "db-custom-2-7680" }
+        {
+          "type": "database",
+          "provider": "cloud_sql",
+          "instance_tier": "db-custom-2-7680"
+        }
       ]
     }
   },
   "env_vars": {
     "erp-core": {
-      "DATABASE_URL": { "source": "cloud_resource", "required": false },
-      "PORT": { "source": "static", "required": false }
+      "DATABASE_URL": {
+        "source": "cloud_resource",
+        "required": false
+      },
+      "PORT": {
+        "source": "static",
+        "required": false
+      }
     },
     "reporting": {
-      "ERP_CORE_URL": { "source": "derived", "required": true },
-      "REDIS_URL": { "source": "cloud_resource", "required": false },
-      "NODE_ENV": { "source": "static", "required": false },
-      "PORT": { "source": "static", "required": false }
+      "ERP_CORE_URL": {
+        "source": "derived",
+        "required": true
+      },
+      "REDIS_URL": {
+        "source": "cloud_resource",
+        "required": false
+      },
+      "NODE_ENV": {
+        "source": "static",
+        "required": false
+      },
+      "PORT": {
+        "source": "static",
+        "required": false
+      }
     },
     "frontend": {
-      "VITE_API_TARGET": { "source": "derived", "required": true },
-      "VITE_PORT": { "source": "static", "required": false }
+      "VITE_API_TARGET": {
+        "source": "derived",
+        "required": true
+      },
+      "VITE_PORT": {
+        "source": "static",
+        "required": false
+      }
     }
   }
 }
