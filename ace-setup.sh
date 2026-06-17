@@ -37,6 +37,14 @@ if ! have pnpm; then
   corepack enable >/dev/null 2>&1 || npm i -g pnpm@9.15.0 || warn "could not install pnpm"
 fi
 have pnpm && log "pnpm: $(pnpm -v)"
+# Persist pnpm/node dir so `ace run` (clean shell) can resolve them via the
+# toolchain env. corepack shims live next to node; record their location.
+if have pnpm; then
+  echo "export PATH=\"$(dirname "$(command -v pnpm)"):\$PATH\"" >>"$TOOLENV.tmp"
+fi
+if have node; then
+  echo "export PATH=\"$(dirname "$(command -v node)"):\$PATH\"" >>"$TOOLENV.tmp"
+fi
 
 # --- JDK 21 (user-local Temurin tarball, no sudo) --------------------------
 JDK_HOME=""

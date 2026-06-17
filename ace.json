@@ -36,8 +36,8 @@
       "name": "erp-core",
       "type": "server",
       "language": "java",
-      "command": "java -jar services/erp-core/target/erp-core.jar --server.port={ace_port}",
-      "build_command": "mvn -q -f services/erp-core/pom.xml -DskipTests package",
+      "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec java -jar services/erp-core/target/erp-core.jar --server.port={ace_port}'",
+      "build_command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; mvn -q -f services/erp-core/pom.xml -DskipTests package'",
       "port": 8080,
       "health_check": "/api/health",
       "start_order": 10,
@@ -50,8 +50,8 @@
       "name": "reporting",
       "type": "server",
       "language": "typescript",
-      "command": "pnpm run dev:reporting",
-      "build_command": "pnpm run build:reporting",
+      "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec pnpm run dev:reporting'",
+      "build_command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; pnpm run build:reporting'",
       "port": 3000,
       "health_check": "/api/health",
       "start_order": 20,
@@ -64,8 +64,8 @@
       "name": "frontend",
       "type": "static",
       "language": "typescript",
-      "command": "pnpm run dev:frontend",
-      "build_command": "pnpm run build:frontend",
+      "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec pnpm run dev:frontend'",
+      "build_command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; pnpm run build:frontend'",
       "port": 5174,
       "health_check": "/",
       "start_order": 30,
@@ -84,18 +84,18 @@
       "description": "QA / staging environment",
       "branch": "qa",
       "services_override": [
-        { "name": "erp-core", "command": "java -jar services/erp-core/target/erp-core.jar --server.port={ace_port}", "port": 8080, "health_check": "/api/health" },
-        { "name": "reporting", "command": "node dist/main", "port": 3000, "health_check": "/api/health" },
-        { "name": "frontend", "command": "npx serve -s dist -l 80", "port": 80 }
+        { "name": "erp-core", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec java -jar services/erp-core/target/erp-core.jar --server.port={ace_port}'", "port": 8080, "health_check": "/api/health" },
+        { "name": "reporting", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec node dist/main'", "port": 3000, "health_check": "/api/health" },
+        { "name": "frontend", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec npx serve -s dist -l 80'", "port": 80 }
       ]
     },
     "production": {
       "description": "Production environment",
       "branch": "prod",
       "services_override": [
-        { "name": "erp-core", "command": "java -jar services/erp-core/target/erp-core.jar --server.port={ace_port}", "port": 8080, "health_check": "/api/health" },
-        { "name": "reporting", "command": "node dist/main", "port": 3000, "health_check": "/api/health" },
-        { "name": "frontend", "command": "npx serve -s dist -l 80", "port": 80 }
+        { "name": "erp-core", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec java -jar services/erp-core/target/erp-core.jar --server.port={ace_port}'", "port": 8080, "health_check": "/api/health" },
+        { "name": "reporting", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec node dist/main'", "port": 3000, "health_check": "/api/health" },
+        { "name": "frontend", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec npx serve -s dist -l 80'", "port": 80 }
       ],
       "cloud_resources_override": [
         { "type": "database", "provider": "cloud_sql", "instance_tier": "db-custom-2-7680" }
