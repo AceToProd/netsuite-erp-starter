@@ -17,6 +17,15 @@ log()  { printf '\033[1;36m[ace-setup]\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33m[ace-setup][warn]\033[0m %s\n' "$*" >&2; }
 have() { command -v "$1" >/dev/null 2>&1; }
 
+# --- E2E forced-failure marker (PaaS safe-update rollback test) ---------------
+# This release intentionally fails its setup so the platform's safe-update
+# health check fails and a forward-safe rollback to the previous release is
+# triggered. This commit lives only on the throwaway e2e/broken-release-r6
+# branch and must never be merged to main.
+log() { printf '\033[1;36m[ace-setup]\033[0m %s\n' "$*"; } 2>/dev/null || true
+log "BROKEN_RELEASE_E2E: intentional setup failure to exercise safe-update rollback"
+exit 1
+
 LOCAL="$HOME/.local"
 TOOLENV="$HOME/.ace-toolchains.env"
 mkdir -p "$LOCAL"
