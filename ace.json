@@ -64,7 +64,7 @@
       "name": "frontend",
       "type": "static",
       "language": "typescript",
-      "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec pnpm run dev:frontend'",
+      "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec pnpm --filter @netsuite-erp/frontend run preview -- --host 0.0.0.0 --port {ace_port}'",
       "build_command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; pnpm run build:frontend'",
       "port": 5174,
       "health_check": "/",
@@ -86,7 +86,7 @@
       "services_override": [
         { "name": "erp-core", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec java -jar services/erp-core/target/erp-core.jar --server.port={ace_port}'", "port": 8080, "health_check": "/api/health" },
         { "name": "reporting", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec node dist/main'", "port": 3000, "health_check": "/api/health" },
-        { "name": "frontend", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec npx serve -s dist -l 80'", "port": 80 }
+        { "name": "frontend", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec pnpm --filter @netsuite-erp/frontend run preview -- --host 0.0.0.0 --port {ace_port}'", "port": 80 }
       ]
     },
     "production": {
@@ -95,7 +95,7 @@
       "services_override": [
         { "name": "erp-core", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec java -jar services/erp-core/target/erp-core.jar --server.port={ace_port}'", "port": 8080, "health_check": "/api/health" },
         { "name": "reporting", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec node dist/main'", "port": 3000, "health_check": "/api/health" },
-        { "name": "frontend", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec npx serve -s dist -l 80'", "port": 80 }
+        { "name": "frontend", "command": "bash -lc '. \"$HOME/.ace-toolchains.env\" 2>/dev/null; exec pnpm --filter @netsuite-erp/frontend run preview -- --host 0.0.0.0 --port {ace_port}'", "port": 80 }
       ],
       "cloud_resources_override": [
         { "type": "database", "provider": "cloud_sql", "instance_tier": "db-custom-2-7680" }
